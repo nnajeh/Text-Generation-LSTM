@@ -15,6 +15,7 @@ raw_text = raw_text.lower()
 # create mapping of unique chars to integers, and a reverse mapping
 chars = sorted(list(set(raw_text)))
 char_to_int = dict((c, i) for i, c in enumerate(chars))
+int_to_char = dict((i, c) for i, c in enumerate(chars))
 
 n_chars = len(raw_text)
 n_vocab = len(chars)
@@ -44,7 +45,9 @@ y = np_utils.to_categorical(dataY)
 
 # define the LSTM model
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(256))
 model.add(Dropout(0.2))
 model.add(Dense(y.shape[1], activation= 'softmax' ))
 
@@ -55,7 +58,3 @@ callbacks_list = [checkpoint]
 
 model.compile(loss= 'categorical_crossentropy' , optimizer='adam' )
 model.fit(X, y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
-
-# summarize performance of the model
-scores = model.evaluate(X, y, verbose=0)
-print("Model Accuracy: %.2f%%" % (scores[1]*100))
