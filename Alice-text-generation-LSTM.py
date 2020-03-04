@@ -8,7 +8,7 @@ from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils
 
 # load text file and covnert to lowercase
-filename = "/content/wonderland.txt"
+filename = "/content/alice-wonderland.txt"
 raw_text = open(filename).read()
 raw_text = raw_text.lower()
 
